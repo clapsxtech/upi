@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "upi",
+  "compatibility_date": "2026-11-03",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": ".",
+    // Serve index.html (200) for any unknown path, so /500 and /1500/note work
+    "not_found_handling": "single-page-application"
+  }
+}

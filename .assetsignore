@@ -1,0 +1,13 @@
+# Keep repo/tooling files off the public site
+.git
+.gitignore
+.assetsignore
+.claude
+.wrangler
+node_modules
+wrangler.jsonc
+CNAME
+.htaccess
+vercel.json
+404.html
+design
