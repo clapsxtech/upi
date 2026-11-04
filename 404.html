@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d9488" />
+  <title>Pay Claps Learn | UPI Payment</title>
+  <meta name="description" content="Pay your Claps Learn tuition fees in one tap with Google Pay, PhonePe, Paytm, BHIM or any UPI app. Direct bank-to-bank transfer." />
+  <meta name="robots" content="noindex" />
+
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn, Telegram). Image URL must be absolute: change the domain if you host elsewhere. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Claps Learn" />
+  <meta property="og:url" content="https://pay.clapslearn.com/" />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="og:title" content="Pay Claps Learn via UPI" />
+  <meta property="og:description" content="Pay your tuition fees in one tap with Google Pay, PhonePe, Paytm or any UPI app. Direct bank-to-bank transfer." />
+  <meta property="og:image" content="https://pay.clapslearn.com/assets/og-pay.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Claps Learn: pay your tuition fees via UPI" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pay Claps Learn via UPI" />
+  <meta name="twitter:description" content="Pay your tuition fees in one tap with Google Pay, PhonePe, Paytm or any UPI app." />
+  <meta name="twitter:image" content="https://pay.clapslearn.com/assets/og-pay.jpg" />
+
+  <link rel="icon" type="image/png" href="/assets/claps-mark.png" />
+  <link rel="apple-touch-icon" href="/assets/claps-mark.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- QRCode.js for desktop / second-phone scanning -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 500px at 50% -10%, #ccfbf1 0%, #f8fafc 60%);
+    }
+    .app-btn { transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease; }
+    .app-btn:active { transform: scale(0.98); }
+    .logo-tile { width: 84px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .logo-tile img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-teal-900/5 border border-slate-100 overflow-hidden">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-br from-teal-600 to-teal-800 text-white p-6 text-center">
+      <a href="https://clapslearn.com/" class="inline-flex items-center justify-center bg-white rounded-xl px-4 py-2 mb-4 shadow-sm">
+        <img src="/assets/claps-logo.png" alt="Claps Learn" class="h-8 w-auto" />
+      </a>
+      <h1 id="merchantDisplay" class="text-lg font-semibold tracking-tight">Pay Claps Learn</h1>
+      <p class="text-xs text-teal-100/80 mt-1">One-to-One Online Tuition</p>
+      <p class="inline-flex items-center gap-1 text-[11px] text-teal-50 mt-3 bg-white/10 rounded-full px-2.5 py-1 break-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <span id="vpaDisplay">skill10715.ibz@icici</span>
+      </p>
+
+      <!-- Amount (shown only when ?am= is passed) -->
+      <div id="amountContainer" class="hidden mt-4 pt-4 border-t border-white/15">
+        <span class="text-xs uppercase tracking-wider text-teal-100/80 block">Amount Payable</span>
+        <span id="amountDisplay" class="text-3xl font-bold text-white mt-0.5 block">₹0</span>
+        <span id="noteDisplay" class="hidden text-xs text-teal-100/80 mt-1 block"></span>
+      </div>
+    </div>
+
+    <!-- Payment options -->
+    <div class="p-6 space-y-3">
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Select your payment app</p>
+
+      <!-- Google Pay (tez:// avoids WhatsApp Pay hijacking upi:// on iOS) -->
+      <a id="gpayBtn" href="#" class="app-btn flex items-center justify-between w-full p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 bg-white">
+        <div class="flex items-center gap-4">
+          <div class="logo-tile"><img src="/assets/gpay.svg" alt="Google Pay" /></div>
+          <div>
+            <span class="block font-semibold text-slate-800 text-sm">Google Pay</span>
+            <span class="block text-xs text-slate-400">Instant UPI transfer</span>
+          </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+      </a>
+
+      <!-- PhonePe -->
+      <a id="phonepeBtn" href="#" class="app-btn flex items-center justify-between w-full p-4 rounded-xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50/40 bg-white">
+        <div class="flex items-center gap-4">
+          <div class="logo-tile"><img src="/assets/phonepe.svg" alt="PhonePe" /></div>
+          <div>
+            <span class="block font-semibold text-slate-800 text-sm">PhonePe</span>
+            <span class="block text-xs text-slate-400">Instant UPI transfer</span>
+          </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+      </a>
+
+      <!-- Paytm -->
+      <a id="paytmBtn" href="#" class="app-btn flex items-center justify-between w-full p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:bg-sky-50/40 bg-white">
+        <div class="flex items-center gap-4">
+          <div class="logo-tile"><img src="/assets/paytm.svg" alt="Paytm" /></div>
+          <div>
+            <span class="block font-semibold text-slate-800 text-sm">Paytm UPI</span>
+            <span class="block text-xs text-slate-400">Instant UPI transfer</span>
+          </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+      </a>
+
+      <!-- BHIM / other UPI apps -->
+      <a id="bhimBtn" href="#" class="app-btn flex items-center justify-between w-full p-4 rounded-xl border border-slate-200 hover:border-orange-500 hover:bg-orange-50/40 bg-white">
+        <div class="flex items-center gap-4">
+          <div class="logo-tile"><img src="/assets/bhim.svg" alt="BHIM" /></div>
+          <div>
+            <span class="block font-semibold text-slate-800 text-sm">BHIM / Other UPI</span>
+            <span class="block text-xs text-slate-400">CRED, Navi, bank apps</span>
+          </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+      </a>
+
+      <!-- Copy UPI ID -->
+      <div class="pt-3">
+        <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5">
+          <div class="truncate pr-2">
+            <span class="text-[11px] uppercase tracking-wider text-slate-400 block">UPI ID</span>
+            <span id="copyText" class="text-xs font-mono font-medium text-slate-700">skill10715.ibz@icici</span>
+          </div>
+          <button type="button" onclick="copyUpiId()" id="copyBtn" class="shrink-0 px-3 py-1.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-medium rounded-lg transition">Copy ID</button>
+        </div>
+      </div>
+
+      <!-- QR code -->
+      <details id="qrDetails" class="group pt-2">
+        <summary class="list-none flex items-center justify-center cursor-pointer text-xs font-medium text-slate-500 hover:text-slate-800 py-2">
+          <span>Show UPI QR code</span>
+          <svg class="w-4 h-4 ml-1 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        </summary>
+        <div class="mt-2 p-4 bg-slate-50 rounded-xl flex flex-col items-center border border-slate-200">
+          <div id="qrcode" class="p-3 bg-white rounded-lg shadow-sm"></div>
+          <p class="text-[11px] text-slate-400 mt-2 text-center">Scan with any UPI app or take a screenshot</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex items-center justify-center gap-2">
+      <img src="/assets/upi.svg" alt="UPI" class="h-4 w-auto" />
+      <p class="text-[11px] text-slate-400">Secure direct bank-to-bank transfer</p>
+    </div>
+  </div>
+
+  <p class="text-[11px] text-slate-400 mt-4 text-center">
+    Questions about your payment? <a href="https://clapslearn.com/" class="text-teal-700 hover:underline">clapslearn.com</a>
+  </p>
+
+  <script>
+    // 1. Config (overridable via URL: /1500, /1500/Maths%20Nov, or ?am=1500&tn=...&pn=...&pa=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pa = urlParams.get('pa') || 'skill10715.ibz@icici';
+    const pn = urlParams.get('pn') || 'Claps Learn';
+
+    // Path form: /{amount} or /{amount}/{note}  (needs host rewrite to index.html)
+    const segs = window.location.pathname.split('/').filter(s => s && s !== 'index.html').map(decodeURIComponent);
+    const amountIdx = segs.findIndex(s => /^\d+(\.\d{1,2})?$/.test(s));
+    const pathAm = amountIdx >= 0 ? segs[amountIdx] : '';
+    const pathTn = amountIdx >= 0 && segs[amountIdx + 1] ? segs[amountIdx + 1] : '';
+
+    const isValidAmount = v => /^\d+(\.\d{1,2})?$/.test(v) && Number(v) > 0;
+    const rawAm = urlParams.get('am') || pathAm;
+    const am = isValidAmount(rawAm) ? rawAm : '';
+    const tn = urlParams.get('tn') || pathTn;
+    const cu = 'INR';
+
+    // 2. Query string
+    const params = new URLSearchParams();
+    params.set('pa', pa);
+    if (pn) params.set('pn', pn);
+    if (am) params.set('am', am);
+    if (tn) params.set('tn', tn);
+    params.set('cu', cu);
+    const q = params.toString();
+
+    // 3. App-specific deep links (bypass WhatsApp Pay on iOS)
+    const genericUpiUri = `upi://pay?${q}`;
+    const gpayUri       = `tez://upi/pay?${q}`;
+    const phonepeUri    = `phonepe://pay?${q}`;
+    const paytmUri      = `paytmmp://pay?${q}`;
+    const bhimUri       = `bhim://pay?${q}`;
+
+    // 4. Bind to UI
+    document.getElementById('vpaDisplay').textContent = pa;
+    document.getElementById('copyText').textContent = pa;
+    if (urlParams.get('pn')) document.getElementById('merchantDisplay').textContent = `Pay ${pn}`;
+    if (am) {
+      document.getElementById('amountContainer').classList.remove('hidden');
+      document.getElementById('amountDisplay').textContent = `₹${Number(am).toLocaleString('en-IN')}`;
+    }
+    if (tn) {
+      const n = document.getElementById('noteDisplay');
+      n.textContent = tn;
+      n.classList.remove('hidden');
+    }
+
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    document.getElementById('gpayBtn').href    = gpayUri;
+    document.getElementById('phonepeBtn').href = phonepeUri;
+    document.getElementById('paytmBtn').href   = paytmUri;
+    // Android: upi:// opens the system app chooser; iOS: use bhim://
+    document.getElementById('bhimBtn').href    = isIOS ? bhimUri : genericUpiUri;
+
+    // 5. QR code (open by default on desktop, where deep links can't work)
+    new QRCode(document.getElementById('qrcode'), {
+      text: genericUpiUri, width: 160, height: 160,
+      colorDark: '#134e4a', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M
+    });
+    if (!isAndroid && !isIOS) document.getElementById('qrDetails').open = true;
+
+    // 6. Android: auto-open the native UPI chooser
+    if (isAndroid) setTimeout(() => { window.location.href = genericUpiUri; }, 400);
+
+    // 7. Copy UPI ID (with fallback for non-HTTPS / older browsers)
+    function copyUpiId() {
+      const done = () => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied!';
+        btn.classList.replace('bg-teal-700', 'bg-emerald-600');
+        setTimeout(() => {
+          btn.textContent = 'Copy ID';
+          btn.classList.replace('bg-emerald-600', 'bg-teal-700');
+        }, 2000);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(pa).then(done);
+      } else {
+        const t = document.createElement('textarea');
+        t.value = pa; document.body.appendChild(t); t.select();
+        document.execCommand('copy'); t.remove(); done();
+      }
+    }
+  </script>
+</body>
+</html>
